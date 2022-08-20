@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import CardHeader from "./CardHeader";
 import DustTime from "./DustTime";
+
 // import { nanoid } from "@reduxjs/toolkit";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, Fragment } from "react";
+import { useEffect, Fragment, useState } from "react";
 import { fetchData } from "../store/dust/DustSlice";
-// import axios from "axios";
 
+import { SIDO } from "../utils/Contents";
 const Section = styled.section`
-  background-color: skyblue;
+  background-color: ${(props) => props.color || "gray"};
 
   border-radius: 10px;
   width: 60%;
@@ -49,41 +50,64 @@ const Spinner = styled.div`
 const Card = () => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.dust.data);
+  console.log("state: ", state);
   const isLoading = useSelector((state) => state.dust.isLoading);
   const status = useSelector((state) => state.dust.status);
-  console.log("isLoading!!: ", isLoading);
-
-  // useEffect(() => {
-  //   dispatch(fetchData());
-  // }, [state, dispatch]);
+  const initialdata = useSelector((state) => state.dust.initialdata);
+  console.log("isLoading", isLoading);
+  console.log("initialdata: ", initialdata);
+  // select SIdodata
+  const [selectData, setSelectData] = useState(SIDO[0]);
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchData());
+      dispatch(fetchData(selectData));
     }
   }, [dispatch, state, fetchData]);
 
+  const Grade = (item) => {
+    return item.datagrade.map((item) => {
+      if (item.grade.length > 0) {
+        return item.grade;
+      } else {
+        return "알수없음";
+      }
+    });
+  };
+
+  const Color = (item) => {
+    return item.datacolor.map((item) => {
+      return item.color;
+    });
+  };
   return (
-    <Fragment>
-      {!isLoading &&
-        state.map((item) => (
-          <Section>
-            <CardHeader
-              sidoName={item.sidoName}
-              stationName={item.stationName}
-            />
-            <Out>
-              <Main>
-                <div>
-                  <h1>좋음</h1>
-                </div>
-                <DustTime dataTime={item.dataTime} pm10Value={item.pm10Value} />
-              </Main>
-            </Out>
-          </Section>
-        ))}
-      {isLoading && <Spinner></Spinner>}
-    </Fragment>
+    <>
+      <>
+        {!isLoading &&
+          initialdata.length > 0 &&
+          initialdata.map((item) => (
+            // console.log('item["datagrade"][0]', item["datagrade"][0].grade)
+            <Section color={Color(item)}>
+              <CardHeader
+                sidoName={item.sidoName}
+                stationName={item.stationName}
+              />
+              <Out>
+                <Main>
+                  <div>
+                    <h1>{Grade(item)}</h1>
+                  </div>
+                  <DustTime
+                    dataTime={item.dataTime}
+                    pm10Value={item.pm10Value}
+                  />
+                </Main>
+              </Out>
+            </Section>
+          ))}
+        {isLoading && <Spinner></Spinner>}
+      </>
+    </>
   );
 };
 

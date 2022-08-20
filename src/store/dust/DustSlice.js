@@ -1,21 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const grade = {
-  1: "좋음",
-  2: "보통",
-  3: "한때나쁨",
-  4: "나쁨",
-  5: "매우나쁨",
-};
+const grade = [
+  { gradeId: 1, grade: "좋음" },
+  { gradeId: 2, grade: "보통" },
+  { gradeId: 3, grade: "한때나쁨" },
+  { gradeId: 4, grade: "나쁨" },
+  { gradeId: 5, grade: "매우나쁨" },
+];
 
-const color = {
-  1: "red",
-  2: "orange",
-  3: "yellow",
-  4: "green",
-  5: "blue",
-};
+const color = [
+  { colorId: 1, color: "red" },
+  { colorId: 2, color: "orange" },
+  { colorId: 3, color: "yellow" },
+  { colorId: 4, color: "green" },
+  { colorId: 5, color: "pink" },
+];
 
 const getParameters = {
   serviceKey:
@@ -24,18 +24,18 @@ const getParameters = {
   returnType: "json",
   numOfRows: "100",
   pageNo: "1",
-  sidoName: "서울",
+
   ver: "1.0",
 };
 
 const POST_URL = "B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
 
-export const fetchData = createAsyncThunk("dust/fetchData", async () => {
+export const fetchData = createAsyncThunk("dust/fetchData", async (sido) => {
   try {
     const response = await axios.get(
       POST_URL,
 
-      { params: getParameters }
+      { params: { ...getParameters, sidoName: sido } }
     );
 
     const post = response.data.response.body.items;
@@ -49,12 +49,13 @@ export const fetchData = createAsyncThunk("dust/fetchData", async () => {
 const dustSlice = createSlice({
   name: "dust",
   initialState: {
-    // stationName: null,
+    stationName: null,
     // dataTime: null,
     // pm10Grade: null,
     // pm10Value: null,
     // sidoName: null,
     data: [],
+    initialdata: [],
     status: "idle",
     error: null,
     grade: grade,
@@ -63,7 +64,14 @@ const dustSlice = createSlice({
     like: false,
     isLoading: false,
   },
-  reducers: {},
+  reducers: {
+    filterGuGunDatas(state, action) {
+      state.stationName = action.payload;
+      // state.initialdata = state.data.filter(
+      //   (item) => item.stationName === state.stationName
+      // );
+    },
+  },
   extraReducers: {
     [fetchData.pending]: (state, action) => {
       state.isLoading = true;
@@ -72,13 +80,18 @@ const dustSlice = createSlice({
     },
     [fetchData.fulfilled]: (state, action) => {
       state.status = "succedded";
+
       state.data = action.payload;
+      state.initialdata = action.payload.map((content) => {
+        const datacolor = state.color.filter(
+          (color) => color.colorId === parseInt(content.pm10Grade)
+        );
+        const datagrade = state.grade.filter(
+          (grade) => grade.gradeId === parseInt(content.pm10Grade)
+        );
+        return { ...content, datacolor, datagrade };
+      }, {});
       state.isLoading = false;
-      // state.stationName = action.payload
-      // state.dataTime = action.payload
-      // state.pm10Grade = action.payload
-      // state.pm10Value = action.payload
-      // state.sidoName = action.payload
     },
     [fetchData.rejected]: (state, action) => {
       state.status = "failed";
@@ -89,3 +102,4 @@ const dustSlice = createSlice({
 
 // export default dustSlice.actions;
 export default dustSlice.reducer;
+export const { filterGuGunDatas } = dustSlice.actions;

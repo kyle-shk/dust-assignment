@@ -1,11 +1,16 @@
 import { useState, useEffect, Fragment } from "react";
-import axios from "axios";
+
 import Option from "./Option";
 import styled from "styled-components";
 
 import CardHeader from "./CardHeader";
 import DustTime from "./DustTime";
 
+import { useSelector, useDispatch } from "react-redux";
+import { fetchData } from "../store/dust/DustSlice";
+import { SIDO } from "../utils/Contents";
+
+import { filterGuGunDatas } from "../store/dust/DustSlice";
 const Section = styled.section`
   background-color: skyblue;
 
@@ -44,76 +49,55 @@ const Spinner = styled.div`
     }
   }
 `;
-const getParameters = {
-  serviceKey:
-    "/gSrNLJJIL6v8Agde0RJ3atI7TV+vU21Qn0ptieqzbXotwzXc+vJQNL5yRaiGRa3P6F3pVBU5kW4Ybj36dAULw==",
-  returnType: "json",
-  numOfRows: "100",
-  sidoName: "서울",
-  pageNo: "1",
-  ver: "1.0",
-};
+
 const InitialHeader = () => {
-  // loading
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  let state = useSelector((state) => state.dust.data);
+  const isLoading = useSelector((state) => state.dust.isLoading);
+  const status = useSelector((state) => state.dust.status);
+  const initialState = useSelector((state) => state.dust.initialdata);
+  console.log("state: ", state);
+  console.log("initialState: ", initialState);
 
-  const [data, setData] = useState([]);
-  // select data
-  const [selectData, setSelectData] = useState({
-    sidoName: "서울",
-    stationName: "중구",
-    dataTime:
-      new Date().getFullYear() +
-      "-0" +
-      new Date().getMonth() +
-      "-0" +
-      new Date().getDay() +
-      " " +
-      new Date().getHours() +
-      ":" +
-      new Date().getMinutes(),
+  // select SIdodata
+  const [selectData, setSelectData] = useState(SIDO[0]);
 
-    pm10Value: 10,
-  });
-  const fetchData = async () => {
-    setIsLoading(true);
-    const response = await axios.get(
-      "B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty",
-      { params: getParameters }
-    );
-    console.log("res: ", response);
-    const post = response.data.response.body.items;
-    console.log(post);
-    setData(post);
-    setIsLoading(false);
+  // select stationName
+  // console.log("station: ", station);
+  // const [station, setStation] = useState(state[0].stationName);
+
+  const changeSidoHandler = async (e) => {
+    setSelectData(e.target.value);
+    dispatch(fetchData(e.target.value));
   };
+
+  const changeGuGunHandler = (e) => {
+    dispatch(filterGuGunDatas(e.target.value));
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (status === "idle") {
+      dispatch(fetchData(selectData));
+    }
+  }, [dispatch, state, status, selectData]);
 
-  const onChange = (e) => {
-    // find object -> data
-    const selectStation = data.find(
-      (item) => item.stationName === e.target.value
-    );
-    // .find((item) => item === e.target.value);
-
-    setSelectData(selectStation);
-  };
-  const option = data.map((item, idx) => <Option item={item} idx={idx} />);
-
+  const option = state.map((item, idx) => <Option item={item} idx={idx} />);
+  const sido = SIDO.map((item) => <option value={item}>{item}</option>);
   return (
     <Fragment>
       <header>
-        <select value={option.stationName} onChange={onChange}>
+        <select value={selectData} onChange={changeSidoHandler}>
+          {sido}
+        </select>
+        <select value={state.stationName} onChange={changeGuGunHandler}>
           {option}
         </select>
       </header>
       {!isLoading && (
         <Section>
           <CardHeader
-            sidoName={selectData.sidoName}
-            stationName={selectData.stationName}
+            sidoName={state["sidoName"]}
+            stationName={state["stationName"]}
           />
           <Out>
             <Main>
@@ -121,8 +105,8 @@ const InitialHeader = () => {
                 <h1>좋음</h1>
               </div>
               <DustTime
-                dataTime={selectData.dataTime}
-                pm10Value={selectData.pm10Value}
+                dataTime={state["dataTime"]}
+                pm10Value={state["pm10Value"]}
               />
             </Main>
           </Out>
