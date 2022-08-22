@@ -57,56 +57,55 @@ const Card = () => {
   console.log("isLoading", isLoading);
   console.log("initialdata: ", initialdata);
   // select SIdodata
-  const [selectData, setSelectData] = useState(SIDO[0]);
+  const [selectData] = useState(SIDO[0]);
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchData(selectData));
     }
-  }, [dispatch, state, fetchData]);
+  }, [dispatch, initialdata, selectData, status]);
 
   const Grade = (item) => {
-    return item.datagrade.map((item) => {
-      if (item.grade.length > 0) {
+    if (item.datagrade.length > 0) {
+      return item.datagrade.map((item) => {
         return item.grade;
-      } else {
-        return "알수없음";
-      }
-    });
+      });
+    } else {
+      return "알수없음";
+    }
   };
 
   const Color = (item) => {
-    return item.datacolor.map((item) => {
-      return item.color;
-    });
+    if (item.datacolor.length > 0) {
+      return item.datacolor.map((item) => {
+        return item.color;
+      });
+    } else {
+      return "";
+    }
   };
   return (
     <>
-      <>
-        {!isLoading &&
-          initialdata.length > 0 &&
-          initialdata.map((item) => (
-            // console.log('item["datagrade"][0]', item["datagrade"][0].grade)
-            <Section color={Color(item)}>
-              <CardHeader
-                sidoName={item.sidoName}
-                stationName={item.stationName}
-              />
-              <Out>
-                <Main>
-                  <div>
-                    <h1>{Grade(item)}</h1>
-                  </div>
-                  <DustTime
-                    dataTime={item.dataTime}
-                    pm10Value={item.pm10Value}
-                  />
-                </Main>
-              </Out>
-            </Section>
-          ))}
-        {isLoading && <Spinner></Spinner>}
-      </>
+      {!isLoading &&
+        initialdata.length > 0 &&
+        initialdata.map((item) => (
+          // console.log('item["datagrade"][0]', item["datagrade"][0].grade)
+          <Section color={Color(item)}>
+            <CardHeader
+              sidoName={item.sidoName}
+              stationName={item.stationName}
+            />
+            <Out>
+              <Main>
+                <div>
+                  <h1>{Grade(item)}</h1>
+                </div>
+                <DustTime dataTime={item.dataTime} pm10Value={item.pm10Value} />
+              </Main>
+            </Out>
+          </Section>
+        ))}
+      {isLoading && <Spinner></Spinner>}
     </>
   );
 };

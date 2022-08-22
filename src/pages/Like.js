@@ -1,47 +1,98 @@
-// import Bottom from "../components/Bottom";
-// import { Fragment } from "react";
-// const Like = () => {
-//   return (
-//     <Fragment>
-//       <Bottom />
-//     </Fragment>
-//   );
-// };
+import styled from "styled-components";
+import CardHeader from "../components/CardHeader";
+import DustTime from "../components/DustTime";
 
-// export default Like;
+import React, { useState, useEffect, Fragment } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { likeHandler } from "../store/dust/DustSlice";
 
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-const getParameters = {
-  serviceKey:
-    "/gSrNLJJIL6v8Agde0RJ3atI7TV+vU21Qn0ptieqzbXotwzXc+vJQNL5yRaiGRa3P6F3pVBU5kW4Ybj36dAULw==",
-  returnType: "json",
-  numOfRows: "100",
-  sidoName: "부산",
-  pageNo: "1",
-  ver: "1.0",
-};
+const Section = styled.section`
+  background-color: ${(props) => props.color || "gray"};
+
+  border-radius: 10px;
+  width: 60%;
+  margin: 10px auto;
+`;
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+  }
+`;
+
+const Out = styled.div``;
+
+const Spinner = styled.div`
+  border: 10px solid #f3f3f3;
+  border-top: 10px solid #3498db;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 function Like() {
-  // loading
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const fetchData = async () => {
-    setIsLoading(true);
-    const response = await axios.get(
-      "B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty",
-      { params: getParameters }
-    );
-    console.log("res: ", response);
-    const post = response.data.response.body.items;
-    console.log(post);
-    setData(post);
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const newArray = useSelector((state) => state.dust.newArray);
+  const isLoading = useSelector((state) => state.dust.isLoading);
 
-  return <div>ff</div>;
+  const Grade = (item) => {
+    if (item.datagrade.length > 0) {
+      return item.datagrade.map((item) => {
+        return item.grade;
+      });
+    } else {
+      return "알수없음";
+    }
+  };
+
+  const Color = (item) => {
+    if (item.datacolor.length > 0) {
+      return item.datacolor.map((item) => {
+        return item.color;
+      });
+    } else {
+      return "";
+    }
+  };
+
+  return (
+    <Fragment>
+      {!isLoading &&
+        newArray.length > 0 &&
+        newArray.map((item) => (
+          // console.log('item["datagrade"][0]', item["datagrade"][0].grade)
+          <Section color={Color(item)}>
+            <CardHeader
+              sidoName={item.sidoName}
+              stationName={item.stationName}
+            />
+            <Out>
+              <Main>
+                <div>
+                  <h1>{Grade(item)}</h1>
+                </div>
+                <DustTime dataTime={item.dataTime} pm10Value={item.pm10Value} />
+              </Main>
+            </Out>
+          </Section>
+        ))}
+      {isLoading && <Spinner></Spinner>}
+    </Fragment>
+  );
 }
 
 export default Like;

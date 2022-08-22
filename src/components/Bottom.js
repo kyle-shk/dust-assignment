@@ -6,6 +6,8 @@ const LI = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 33.33333%;
+  border: 1px solid yellow;
 `;
 
 const Ul = styled.ul`
@@ -35,6 +37,9 @@ const Foot = styled.footer`
   background-color: gray;
 `;
 const Bottom = () => {
+  // const toggleHandler = (e) => {
+  //   e.currentTarget.classList.toggle("bg-salmon");
+  // };
   return (
     <Foot>
       <nav>

@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchData } from "../store/dust/DustSlice";
 import { SIDO } from "../utils/Contents";
 
-import { filterGuGunDatas } from "../store/dust/DustSlice";
+import { filterGuGunDatas, likeHandler } from "../store/dust/DustSlice";
 const Section = styled.section`
   background-color: skyblue;
 
@@ -62,11 +62,15 @@ const InitialHeader = () => {
   // select SIdodata
   const [selectData, setSelectData] = useState(SIDO[0]);
 
-  // select stationName
-  // console.log("station: ", station);
-  // const [station, setStation] = useState(state[0].stationName);
+  // select like
+  const [Like, setLike] = useState(false);
 
-  const changeSidoHandler = async (e) => {
+  // like change
+  const changeLike = () => {
+    dispatch(likeHandler());
+  };
+
+  const changeSidoHandler = (e) => {
     setSelectData(e.target.value);
     dispatch(fetchData(e.target.value));
   };
@@ -81,7 +85,9 @@ const InitialHeader = () => {
     }
   }, [dispatch, state, status, selectData]);
 
-  const option = state.map((item, idx) => <Option item={item} idx={idx} />);
+  const option = initialState.map((item, idx) => (
+    <Option item={item} idx={idx} />
+  ));
   const sido = SIDO.map((item) => <option value={item}>{item}</option>);
   return (
     <Fragment>

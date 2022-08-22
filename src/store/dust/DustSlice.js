@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+// const { REACT_APP_SERVICE_KEY } = process.env;
+const POST_URL = "B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
 
 const grade = [
   { gradeId: 1, grade: "좋음" },
@@ -28,8 +30,6 @@ const getParameters = {
   ver: "1.0",
 };
 
-const POST_URL = "B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
-
 export const fetchData = createAsyncThunk("dust/fetchData", async (sido) => {
   try {
     const response = await axios.get(
@@ -50,10 +50,10 @@ const dustSlice = createSlice({
   name: "dust",
   initialState: {
     stationName: null,
+    sidoName: null,
     // dataTime: null,
     // pm10Grade: null,
     // pm10Value: null,
-    // sidoName: null,
     data: [],
     initialdata: [],
     status: "idle",
@@ -63,14 +63,37 @@ const dustSlice = createSlice({
     newArray: [],
     like: false,
     isLoading: false,
+    tmpArray: [],
+    newSudo: [{}],
   },
   reducers: {
     filterGuGunDatas(state, action) {
       state.stationName = action.payload;
-      // state.initialdata = state.data.filter(
-      //   (item) => item.stationName === state.stationName
-      // );
+      state.data = state.initialdata.map((item) => {
+        const newStation = item.filter(
+          (item) => item.stationName === state.stationName
+        );
+        return { ...newStation };
+      });
     },
+    likeHandler(state, action) {
+      state.like = !action.payload;
+      state.newArray = state.initialdata.filter((item) => {
+        return item.like === true;
+      });
+    },
+    newStation(state, action) {
+      state.tmpArray = state.initialdata.filter((item) => {
+        return item.stationName === action.payload;
+      });
+      // reduce 이용..
+      // state.newArray = state.tmpArray.map((item) => {
+      //   item["like"] = state.like;
+      //   // return [{ ...state.newArray, item }];
+      //   return [{ ...state.newArray, item }];
+      // });
+    },
+    newArray(state, action) {},
   },
   extraReducers: {
     [fetchData.pending]: (state, action) => {
@@ -81,7 +104,6 @@ const dustSlice = createSlice({
     [fetchData.fulfilled]: (state, action) => {
       state.status = "succedded";
 
-      state.data = action.payload;
       state.initialdata = action.payload.map((content) => {
         const datacolor = state.color.filter(
           (color) => color.colorId === parseInt(content.pm10Grade)
@@ -89,8 +111,32 @@ const dustSlice = createSlice({
         const datagrade = state.grade.filter(
           (grade) => grade.gradeId === parseInt(content.pm10Grade)
         );
-        return { ...content, datacolor, datagrade };
+        const like = { like: state.like };
+        return { ...content, ...like, datacolor, datagrade };
       }, {});
+
+      // state.data = state.initialdata.map((item) => {
+      //   if (!state.initialdata[0].stationName === "관악구") {
+      //     return state.initialdata.find(
+      //       (item) => item.stationName === "관악구"
+      //     );
+      //   } else {
+      //     return state.initialdata.find(
+      //       (item) => state.initialdata.stationName === item.stationName
+      //     );
+      //   }
+      // });
+      // if (!state.initialdata[0].stationName === "관악구") {
+      //   state.data = state.initialdata.find(
+      //     (item) => item.stationName === "관악구"
+      //   );
+      // } else {
+      //   state.data = state.initialdata.find(
+      //     (item) => state.initialdata.stationName === item.stationName
+      //   );
+      // }
+      // state.stationName = state.initialdata[0].stationName;
+      // state.sidoName = state.initialdata[0].sidoName;
       state.isLoading = false;
     },
     [fetchData.rejected]: (state, action) => {
@@ -102,4 +148,5 @@ const dustSlice = createSlice({
 
 // export default dustSlice.actions;
 export default dustSlice.reducer;
-export const { filterGuGunDatas } = dustSlice.actions;
+export const { filterGuGunDatas, likeHandler, newStation, newArray } =
+  dustSlice.actions;
