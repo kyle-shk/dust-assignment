@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { likeHandler, newStation, newArray } from "../store/dust/DustSlice";
+import { likeHandler, newStation } from "../store/dust/DustSlice";
 const CardHeader = ({ sidoName, stationName }) => {
   const Top = styled.div`
     text-align: left;
@@ -17,7 +17,7 @@ const CardHeader = ({ sidoName, stationName }) => {
   // select like
   const [Like, setLike] = useState(false);
   // station
-  const [station, setStation] = useState(stationName);
+  const [station] = useState(stationName);
   const dispatch = useDispatch();
   // like change
   const changeLike = () => {

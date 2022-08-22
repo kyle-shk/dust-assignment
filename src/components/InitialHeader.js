@@ -12,8 +12,8 @@ import { SIDO } from "../utils/Contents";
 
 import {
   newStation1,
-  filterGuGunDatas,
-  likeHandler,
+  // filterGuGunDatas,
+  // likeHandler,
   newStation,
 } from "../store/dust/DustSlice";
 const Section = styled.section`
@@ -70,13 +70,13 @@ const InitialHeader = () => {
   const [selectData, setSelectData] = useState(SIDO[0]);
 
   // select like
-  const [Like, setLike] = useState(false);
+  // const [Like, setLike] = useState(false);
   // select station
   const [station, setStation] = useState(Station);
   // like change
-  const changeLike = () => {
-    dispatch(likeHandler());
-  };
+  // const changeLike = () => {
+  //   dispatch(likeHandler());
+  // };
 
   const changeSidoHandler = (e) => {
     setSelectData(e.target.value);

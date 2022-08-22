@@ -58,7 +58,7 @@ const Card = () => {
   console.log("isLoading", isLoading);
   console.log("initialdata: ", initialdata);
   // select SIdodata
-  const [data, selectData] = useState(SIDO[0]);
+  const [data] = useState(SIDO[0]);
 
   useEffect(() => {
     if (status === "idle") {
