@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-
+import { useState } from "react";
 const LI = styled.li`
   list-style: none;
   display: flex;
@@ -8,6 +8,9 @@ const LI = styled.li`
   align-items: center;
   width: 33.33333%;
   border: 1px solid yellow;
+  &:hover {
+    background-color: pink;
+  }
 `;
 
 const Ul = styled.ul`
@@ -37,9 +40,15 @@ const Foot = styled.footer`
   background-color: gray;
 `;
 const Bottom = () => {
-  // const toggleHandler = (e) => {
-  //   e.currentTarget.classList.toggle("bg-salmon");
-  // };
+  const [Name, setName] = useState({
+    a: "",
+    b: "",
+    c: "",
+  });
+  const toggleHandler = (e) => {
+    // ...Name,
+    // [e.target.name] = 'color',
+  };
   return (
     <Foot>
       <nav>

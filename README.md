@@ -1,70 +1,26 @@
-# Getting Started with Create React App
+## 후기(미완성..)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+toolkit을 사용해서 과제를 수행했습니다. 처음 비동기데이터를받고 받은 데이터를
+기반으로 지역에대한 정보를 얻어 초기화면에 따라 미세먼지농도가 바뀌는 기능을 구현했어야했는데 이부분에서 어떻게 비동기처를한 데이터를 갖고 초기화면을 구성해야할지몰라 결국 구현하지못했습니다.(상태관리를 어떤데이터를 어떻게 만들고해야할지 잘모르겠습니다..)
 
-## Available Scripts
+즐겨찾기 기능또한 상태관리부분에서 즐겨찾기부분을 어떤식으로 데이터처리해야할지몰라 해맸었는데 기존 데이터객체에서 즐겨찾기에해당하는 프로퍼티를 넣고 해당 버튼을 누를시 즐겨찾기 프로퍼티가 바뀌는식으로 구현한뒤 map을 이용해 조건에맞는 객체들만 즐겨찾기 페이지에 구현하는식으로 구현하려했는데 즐겨찾기버튼을 클릭했을때 클릭한 객체는 입력이잘됐지만 2개이상부터는 인식이되지않는 오류가있습니다..
 
-In the project directory, you can run:
+styled-components를 이용해서 탭클릭할때마다 해당 탭이뭔지 표시하는 css를 만들려했지만 구현하지못했습니다.
 
-### `npm start`
+styled-components 적용시 부모컴포넌트가있는 컴포넌트에 적용하면 dynamic에러가떠서 폴더를 분리해서 다시적용했어야했는데 시간이없어서 구현하지못했습니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### api 로 데이터 받아오기[o]
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 미세먼지 정보 표시 위한 카드 컴포넌트 제작[o]
 
-### `npm test`
+### 카드 컴포넌트 속, 미세먼지 수치에 따른 카드 색상 변화[o]
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 카드 컴포넌트 속, 즐겨찾기 등록/해제 여부에 따른 즐겨찾기 버튼의 형태 변화
 
-### `npm run build`
+### 지역 변경을 위한 드롭다운 메뉴 컴포넌트 제작[o]
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 기본지역 보기 / 전체 보기 / 즐겨찾기 보기 전환을 위한 탭 컴포넌트 제작[x]
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 기본지역 보기 / 전체 보기 / 즐겨찾기 보기 페이지 각각 구현[x]
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Redux 를 활용해서 즐겨찾기 관리[o]
