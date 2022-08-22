@@ -2,9 +2,9 @@ import styled from "styled-components";
 import CardHeader from "../components/CardHeader";
 import DustTime from "../components/DustTime";
 
-import React, { useState, useEffect, Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { likeHandler } from "../store/dust/DustSlice";
+import React, { Fragment } from "react";
+import { useSelector } from "react-redux";
+// import { likeHandler } from "../store/dust/DustSlice";
 
 const Section = styled.section`
   background-color: ${(props) => props.color || "gray"};
