@@ -10,9 +10,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchData } from "../store/dust/DustSlice";
 import { SIDO } from "../utils/Contents";
 
-import { filterGuGunDatas, likeHandler } from "../store/dust/DustSlice";
+import {
+  newStation1,
+  filterGuGunDatas,
+  likeHandler,
+  newStation,
+} from "../store/dust/DustSlice";
 const Section = styled.section`
-  background-color: skyblue;
+  background-color: ${(props) => props.color || "gray"};
 
   border-radius: 10px;
   width: 60%;
@@ -56,6 +61,8 @@ const InitialHeader = () => {
   const isLoading = useSelector((state) => state.dust.isLoading);
   const status = useSelector((state) => state.dust.status);
   const initialState = useSelector((state) => state.dust.initialdata);
+  const Station = useSelector((state) => state.dust.stationName);
+  const newSudo = useSelector((state) => state.dust.newSudo);
   console.log("state: ", state);
   console.log("initialState: ", initialState);
 
@@ -64,7 +71,8 @@ const InitialHeader = () => {
 
   // select like
   const [Like, setLike] = useState(false);
-
+  // select station
+  const [station, setStation] = useState(Station);
   // like change
   const changeLike = () => {
     dispatch(likeHandler());
@@ -76,7 +84,10 @@ const InitialHeader = () => {
   };
 
   const changeGuGunHandler = (e) => {
-    dispatch(filterGuGunDatas(e.target.value));
+    // dispatch(filterGuGunDatas(e.target.value));
+    setStation(e.target.value);
+    dispatch(newStation1(Station));
+    dispatch(newStation(e.target.value));
   };
 
   useEffect(() => {
@@ -89,30 +100,51 @@ const InitialHeader = () => {
     <Option item={item} idx={idx} />
   ));
   const sido = SIDO.map((item) => <option value={item}>{item}</option>);
+
+  const Grade = (item) => {
+    if (item.datagrade.length > 0) {
+      return item.datagrade.map((item) => {
+        return item.grade;
+      });
+    } else {
+      return "알수없음";
+    }
+  };
+
+  const Color = (item) => {
+    if (item.datacolor.length > 0) {
+      return item.datacolor.map((item) => {
+        return item.color;
+      });
+    } else {
+      return "";
+    }
+  };
+  console.log("newSudo: ", newSudo);
   return (
     <Fragment>
       <header>
         <select value={selectData} onChange={changeSidoHandler}>
           {sido}
         </select>
-        <select value={state.stationName} onChange={changeGuGunHandler}>
+        <select value={station} onChange={changeGuGunHandler}>
           {option}
         </select>
       </header>
       {!isLoading && (
-        <Section>
+        <Section color={Color(newSudo)}>
           <CardHeader
-            sidoName={state["sidoName"]}
-            stationName={state["stationName"]}
+            sidoName={newSudo["sidoName"]}
+            stationName={newSudo["stationName"]}
           />
           <Out>
             <Main>
               <div>
-                <h1>좋음</h1>
+                <h1>{Grade(newSudo)}</h1>
               </div>
               <DustTime
-                dataTime={state["dataTime"]}
-                pm10Value={state["pm10Value"]}
+                dataTime={newSudo["dataTime"]}
+                pm10Value={newSudo["pm10Value"]}
               />
             </Main>
           </Out>

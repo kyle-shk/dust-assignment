@@ -54,13 +54,13 @@ const Bottom = () => {
       <nav>
         <Ul>
           <LI>
-            <DIV to="/">
+            <DIV to="/Initial">
               <i className="fa-solid fa-location-dot"></i>
               <p>내 지역보기</p>
             </DIV>
           </LI>
           <LI>
-            <DIV to="/All">
+            <DIV to="/">
               <i className="fa-solid fa-map-location-dot"></i>
               <p>전체 시도보기</p>
             </DIV>

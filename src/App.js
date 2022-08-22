@@ -15,8 +15,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route></Route>
-            <Route path="/" element={<Initial />}></Route>
-            <Route path="All" element={<All />}></Route>
+            <Route path="/Initial" element={<Initial />}></Route>
+            <Route path="/" element={<All />}></Route>
             <Route path="Like" element={<Like />}></Route>
             <Route path="*" element={<p>Not Found</p>}></Route>
           </Routes>

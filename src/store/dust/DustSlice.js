@@ -49,7 +49,7 @@ export const fetchData = createAsyncThunk("dust/fetchData", async (sido) => {
 const dustSlice = createSlice({
   name: "dust",
   initialState: {
-    stationName: null,
+    stationName: "",
     sidoName: null,
     // dataTime: null,
     // pm10Grade: null,
@@ -64,18 +64,18 @@ const dustSlice = createSlice({
     like: false,
     isLoading: false,
     tmpArray: [],
-    newSudo: [{}],
+    newSudo: [],
   },
   reducers: {
-    filterGuGunDatas(state, action) {
-      state.stationName = action.payload;
-      state.data = state.initialdata.map((item) => {
-        const newStation = item.filter(
-          (item) => item.stationName === state.stationName
-        );
-        return { ...newStation };
-      });
-    },
+    // filterGuGunDatas(state, action) {
+    //   state.stationName = action.payload;
+    //   state.data = state.initialdata.map((item) => {
+    //     const newStation = item.filter(
+    //       (item) => item.stationName === state.stationName
+    //     );
+    //     return { ...newStation };
+    //   });
+    // },
     likeHandler(state, action) {
       state.like = !action.payload;
       state.newArray = state.initialdata.filter((item) => {
@@ -83,7 +83,7 @@ const dustSlice = createSlice({
       });
     },
     newStation(state, action) {
-      state.tmpArray = state.initialdata.filter((item) => {
+      state.newSudo = state.initialdata.find((item) => {
         return item.stationName === action.payload;
       });
       // reduce 이용..
@@ -94,6 +94,15 @@ const dustSlice = createSlice({
       // });
     },
     newArray(state, action) {},
+    newStation1(state, action) {
+      state.stationName = action.payload;
+    },
+    newSudo(state, action) {
+      state.stationName = action.payload;
+      state.newSudo = state.initialdata.find(
+        (item) => state.stationName === item.stationName
+      );
+    },
   },
   extraReducers: {
     [fetchData.pending]: (state, action) => {
@@ -114,29 +123,10 @@ const dustSlice = createSlice({
         const like = { like: state.like };
         return { ...content, ...like, datacolor, datagrade };
       }, {});
-
-      // state.data = state.initialdata.map((item) => {
-      //   if (!state.initialdata[0].stationName === "관악구") {
-      //     return state.initialdata.find(
-      //       (item) => item.stationName === "관악구"
-      //     );
-      //   } else {
-      //     return state.initialdata.find(
-      //       (item) => state.initialdata.stationName === item.stationName
-      //     );
-      //   }
-      // });
-      // if (!state.initialdata[0].stationName === "관악구") {
-      //   state.data = state.initialdata.find(
-      //     (item) => item.stationName === "관악구"
-      //   );
-      // } else {
-      //   state.data = state.initialdata.find(
-      //     (item) => state.initialdata.stationName === item.stationName
-      //   );
-      // }
-      // state.stationName = state.initialdata[0].stationName;
-      // state.sidoName = state.initialdata[0].sidoName;
+      state.sidoName = state.initialdata[0]["sidoName"];
+      state.newSudo = state.initialdata.find(
+        (item) => state.sidoName === item.sidoName
+      );
       state.isLoading = false;
     },
     [fetchData.rejected]: (state, action) => {
@@ -148,5 +138,11 @@ const dustSlice = createSlice({
 
 // export default dustSlice.actions;
 export default dustSlice.reducer;
-export const { filterGuGunDatas, likeHandler, newStation, newArray } =
-  dustSlice.actions;
+export const {
+  filterGuGunDatas,
+  newStation1,
+  likeHandler,
+  newStation,
+  newArray,
+  newSudo,
+} = dustSlice.actions;

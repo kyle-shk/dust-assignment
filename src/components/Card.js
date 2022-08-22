@@ -54,16 +54,17 @@ const Card = () => {
   const isLoading = useSelector((state) => state.dust.isLoading);
   const status = useSelector((state) => state.dust.status);
   const initialdata = useSelector((state) => state.dust.initialdata);
+  // const sidoName =
   console.log("isLoading", isLoading);
   console.log("initialdata: ", initialdata);
   // select SIdodata
-  const [selectData] = useState(SIDO[0]);
+  const [data, selectData] = useState(SIDO[0]);
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchData(selectData));
+      dispatch(fetchData(data));
     }
-  }, [dispatch, initialdata, selectData, status]);
+  }, [dispatch, initialdata, data, status]);
 
   const Grade = (item) => {
     if (item.datagrade.length > 0) {
